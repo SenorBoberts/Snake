@@ -21,6 +21,17 @@ pub enum Direction{
     RIGHT
 }
 
+pub struct SnakePlugin;
+
+impl Plugin for SnakePlugin{
+    fn build(&self, app: &mut App){
+        app
+            .add_systems(Startup, spawn_snake)
+            .add_systems(FixedUpdate, (check_inbounds, move_snake)) 
+            .add_systems(Update, (update_direction, grow));
+    }
+}
+
 pub fn spawn_snake(mut commands: Commands){
     commands.spawn((
         SpriteBundle {
@@ -54,7 +65,7 @@ pub fn spawn_segment(mut commands: Commands, x: f32, y: f32) -> Entity{
         },
         ..default()
     }, 
-    SnakeTail
+    SnakeTail,
     )).id()
 }
 
@@ -96,11 +107,11 @@ pub fn grow(commands: Commands, mut e: EventReader<FoodAte>, mut score: ResMut<S
     }
 }
 
-pub fn check_inbounds(query: Query<&Transform, With<Snake>>){
+pub fn check_inbounds(query: Query<&Transform, With<Snake>>, mut e: EventWriter<GameOver>){
     for transform in &query{
         if transform.translation.x < -SCALE * (COLS_ROWS / 2.0) || transform.translation.x > SCALE * (COLS_ROWS / 2.0) ||
             transform.translation.y < -SCALE * (COLS_ROWS / 2.0) || transform.translation.y > SCALE * (COLS_ROWS / 2.0){
-            println!("OutOfBounds");
+                e.send(GameOver);
         }
     }
 }

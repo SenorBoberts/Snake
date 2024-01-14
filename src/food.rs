@@ -9,6 +9,16 @@ const FOOD_SCALE: f32 = SCALE / 2.0;
 #[derive(Component)]
 pub struct Food;
 
+pub struct FoodPlugin;
+
+impl Plugin for FoodPlugin{
+    fn build(&self, app: &mut App){
+        app
+            .add_systems(Startup, spawn_food)
+            .add_systems(Update, check_eaten);
+    }
+}
+
 pub fn food_bundle() -> (SpriteBundle, Food, Collider){
             (SpriteBundle{
                 transform: Transform{
@@ -23,8 +33,8 @@ pub fn food_bundle() -> (SpriteBundle, Food, Collider){
                 ..default()
             }, 
             Food,
-            Collider)
-}
+            Collider,
+)}
 
 pub fn spawn_food(mut commands: Commands){
     commands.spawn(food_bundle());
