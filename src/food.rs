@@ -51,5 +51,5 @@ pub fn check_eaten(mut er_food: EventReader<FoodAte>, mut commands: Commands, qu
 
 fn get_random_cord() -> f32{
     let mut rng = rand::thread_rng();
-    return rng.gen_range(-(COLS_ROWS / 2.0)..(COLS_ROWS / 2.0)).floor() * SCALE;
+    return rng.gen_range(-(COLS_ROWS / 2.0 - 1.0)..(COLS_ROWS / 2.0 - 1.0)).floor() * SCALE;
 }
